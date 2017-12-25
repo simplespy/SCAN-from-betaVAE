@@ -13,7 +13,7 @@
     * mathematical details of VAE
 * 1223 train on more samples
 
-#####More work to be done after Exam Week and Endless Coursework……
+##### More work to be done after Exam Week and Endless Coursework……
 * to-do:
     * implement evaluation of disentanglement metric
     * further about SCAN
