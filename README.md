@@ -11,7 +11,13 @@
     * train more epochs(500/1000/2000)
     * draw correlation curves between latent representations and given factors using better model
     * mathematical details of VAE
+* 1223 train on more samples
+
+#####More work to be done after Exam Week and Endless Coursework……
 * to-do:
-    * train on more samples
     * implement evaluation of disentanglement metric
     * further about SCAN
+    
+    
+
+See `Peiyao_Sheng_beta_VAE.ipynb` for more implementation details.
