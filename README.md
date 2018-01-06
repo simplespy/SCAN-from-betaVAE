@@ -1,5 +1,44 @@
-# Work Dairy
+# Readme
+* `python train_vae.py --train`
+	* to start training VAE model of PART Ⅰ
+* `python train_dae.py --train --load='dae_epoch_2900.pth'` 
+	* to continue training DAE model of **SCAN**
+*  `beta-VAE/Peiyao_Sheng_beta_VAE.ipynb`
+	* to check the implementation about **beta-VAE** (on 2D-shape dataset)
 
+# Work Dairy
+### SCAN
+
+* 0105 Review the paper of SCAN and observe that it includes three parts:
+	* PART Ⅰ: beta-VAE to disentangle the primitives
+	* PART Ⅱ: SCAN to abstract the concepts
+	* PART Ⅲ: Recombinator to create new concepts
+
+* 0106 Implementing PART Ⅰ with *Pytorch*
+	* denoising autoencoder(DAE)
+		* continue training process by command
+		
+			`python train_dae.py --train --load='dae_epoch_2900.pth'`
+		* current results:
+			
+			![](SCAN/save/dae/target_epoch_2900.png) 
+			![](SCAN/save/dae/target_epoch_2990.png) target
+			![](SCAN/save/dae/reconstr_epoch_2900.png) 
+			![](SCAN/save/dae/reconstr_epoch_2990.png)reconstruction
+	* beta-VAE
+		* There is a problem about the reconstruction loss of this part, I'll figure out it soon.
+* to-do-list:
+	* continue training beta-VAE
+	* implement SCAN and Recombinator
+
+
+p.s. I didn't find the original dataset and use [this mimic version](https://github.com/miyosuda/rodent/tree/master/examples/04_texture_replace) to implement models
+
+Some Ref: [TensorFlow Version](https://github.com/miyosuda/scan)
+
+
+
+### beta-VAE
 * 1219 read papers
     * VAE: framework & overall mathematical idea
     * beta-VAE: framework derivation & disentanglement metric
@@ -18,6 +57,4 @@
     * implement evaluation of disentanglement metric
     * further about SCAN
     
-    
-
-See `Peiyao_Sheng_beta_VAE.ipynb` for more implementation details.
+See `beta-VAE/Peiyao_Sheng_beta_VAE.ipynb` for more implementation details.
