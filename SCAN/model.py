@@ -104,13 +104,13 @@ class VAE(nn.Module):
 		z = self.reparameterize(mu, logvar)
 		return self.decode(z), mu, logvar
 
-	def compute_loss(self, x, x_out, mu, logvar, dae, beta=53.0):
+	def compute_loss(self, x, x_out, mu, logvar, dae, beta=0.5):
 		z_d = dae.encode(x)
 		z_out_d = dae.encode(x_out)
 		delta = z_d - z_out_d
 		L2_loss = 0.5 * torch.sum(torch.mul(delta, delta))
-		KLD_loss = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-		return L2_loss, beta * KLD_loss
+		KLD_loss = -0.5 * beta * torch.sum(1 + logvar - torch.mul(mu, mu) - logvar.exp())
+		return L2_loss, KLD_loss
 
 class SCAN(nn.Module):
 	def __init__(self):

@@ -55,9 +55,9 @@ def train_vae(dae, vae, data_manager, optimizer, batch_size=100, training_epochs
       reconstr_loss, latent_loss = vae.compute_loss(data, recon_batch, mu, logvar, dae)
       loss = reconstr_loss + latent_loss
       loss.backward()
-      optimizer.step()
       average_reconstr_loss += reconstr_loss.data[0] / IMAGE_CAPACITY * batch_size
       average_latent_loss   += latent_loss.data[0]   / IMAGE_CAPACITY * batch_size
+      optimizer.step()
 
 
       step += 1
@@ -69,6 +69,7 @@ def train_vae(dae, vae, data_manager, optimizer, batch_size=100, training_epochs
             "latent=",   "{:.3f}".format(average_latent_loss))
 
     if epoch % 10 == 0:
+      recon_batch = dae(recon_batch)
       recon_batch = torch.transpose(recon_batch,2,3)
       recon_batch = torch.transpose(recon_batch,1,3)
       if use_cuda: hsv_image = recon_batch.data.cpu().numpy()
@@ -105,7 +106,7 @@ else:
 if opt.load != '':
   print('loading {}'.format(opt.load))
   if use_cuda:
-    vae.load_state_dict(torch.load())
+    vae.load_state_dict(torch.load(exp+'/'+opt.load))
   else:
     vae.load_state_dict(torch.load(exp+'/'+opt.load, map_location=lambda storage, loc: storage))
 
