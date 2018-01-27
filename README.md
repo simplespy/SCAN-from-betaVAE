@@ -1,4 +1,6 @@
 # Readme
+* `python train_scan.py --train --load='scan_epoch_1499.pth'`
+	* to continue training SCAN
 * `python vae_disentangle.py`
 	* to see results of disentanglement
 * `python train_vae.py --train --load='vae_epoch_2900.pth'` 
@@ -11,7 +13,15 @@
 # Work Dairy
 ### SCAN
 * to-do-list:
-	* implement SCAN and Recombinator
+	* implement Recombinator
+	
+* 0117
+	* finish SCAN
+	* results:
+	
+	wall_color = 0 ![](SCAN/disentangle_img/sym2img0.png) 
+	wall_color = 0 & floor_color = 0 ![](SCAN/disentangle_img/sym2img1.png)
+	
 
 * 0108
 	* finish beta-VAE and disentangled part

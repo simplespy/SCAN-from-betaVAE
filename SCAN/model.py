@@ -115,6 +115,45 @@ class VAE(nn.Module):
 class SCAN(nn.Module):
 	def __init__(self):
 		super(SCAN, self).__init__()
+		self.fc1 = nn.Linear(51, 100)
+		self.fc21 = nn.Linear(100, 32)
+		self.fc22 = nn.Linear(100, 32)
+		self.fc3 = nn.Linear(32, 100)
+		self.fc4 = nn.Linear(100, 51)
+
+		self.relu = nn.ReLU()
+		self.sigmoid = nn.Sigmoid()
+		self.bceloss = nn.BCELoss(size_average=False)
+
+	def encode(self, y):
+		h = self.relu(self.fc1(y))
+		return self.fc21(h), self.fc22(h)
 		
+	def reparameterize(self, mu, logvar):
+		std = logvar.mul(0.5).exp_()
+		eps = Variable(std.data.new(std.size()).normal_())
+		return eps.mul(std).add_(mu)
+
+	def decode(self, z):
+		x = self.relu(self.fc3(z))
+		x = self.fc4(x)
+		out = self.sigmoid(x)
+		return out
+
+	def forward(self, y):
+		mu, logvar = self.encode(y)
+		z = self.reparameterize(mu, logvar)
+		out = self.decode(z)
+		return out, mu, logvar
+
+	def compute_loss(self, x, y, target, mu, logvar, x_mu, x_logvar, beta=1.0, lambd=10.0):
+		reconstr_loss = self.bceloss(y, target)
+		KLD_loss_1 = -0.5 * beta * torch.sum(1 + logvar - torch.mul(mu, mu) - logvar.exp())
+		KLD_loss_2 = lambd * self._kl(x_mu, x_logvar, mu, logvar)
+		return reconstr_loss, KLD_loss_1, KLD_loss_2
+
+	def _kl(self, mu1, logvar1, mu2, logvar2):
+		mu = mu1 - mu2
+		return torch.sum(0.5 * (logvar2 - logvar1 + (logvar1 - logvar2).exp() + torch.mul(mu, mu) / logvar2.exp() -1))
 
 
