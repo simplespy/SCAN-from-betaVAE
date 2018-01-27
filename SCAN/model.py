@@ -156,4 +156,40 @@ class SCAN(nn.Module):
 		mu = mu1 - mu2
 		return torch.sum(0.5 * (logvar2 - logvar1 + (logvar1 - logvar2).exp() + torch.mul(mu, mu) / logvar2.exp() -1))
 
+class Recombinator(nn.Module):
+	def __init__(self):
+		super(Recombinator, self).__init__()
+		self.conv = nn.Sequential(
+			nn.Conv1d(4, 1024, 1),
+			nn.ReLU(),
+			nn.Conv1d(1024, 6, 1))
+
+	def recombine(self, mu0, logvar0, mu1, logvar1):
+		z_stacked = torch.stack([mu0, mu1, logvar0, logvar1], 1)
+		return z_stacked
+
+	def reparameterize(self, mu, logvar):
+		std = logvar.mul(0.5).exp_()
+		eps = Variable(std.data.new(std.size()).normal_())
+		return eps.mul(std).add_(mu)
+
+	def forward(self, mu0, logvar0, mu1, logvar1, op):
+		z_stacked = self.recombine(mu0, logvar0, mu1, logvar1)
+		h = self.conv(z_stacked)
+		mu, logvar = torch.split(h, 3, 1)
+		r_mu = torch.sum(torch.matmul(op, mu), 1)
+		r_logvar = torch.sum(torch.matmul(op, logvar), 1)
+		r_z = self.reparameterize(r_mu, r_logvar)
+		return r_z, r_mu, r_logvar
+	def compute_loss(self, r_mu, r_logvar, x_mu, x_logvar, y_mu, y_logvar):
+		image_loss = self._kl(x_mu, x_logvar, r_mu, r_logvar)
+		symbol_loss = self._kl(y_mu, y_logvar, r_mu, r_logvar)
+		return image_loss, symbol_loss
+
+	def _kl(self, mu1, logvar1, mu2, logvar2):
+		mu = mu1 - mu2
+		return torch.sum(0.5 * (logvar2 - logvar1 + (logvar1 - logvar2).exp() + torch.mul(mu, mu) / logvar2.exp() -1))
+
+
+
 
