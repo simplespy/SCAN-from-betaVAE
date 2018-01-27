@@ -68,7 +68,6 @@ def train_recomb(dae, vae, scan, recomb, data_manager, optimizer, begin_epoch=0,
 
     if epoch % display_epoch == 0:
       print("Epoch:", '%04d' % (epoch+1), "loss=", "{}".format(average_loss))
-      sys.stdout.flush()
 
     if (epoch % save_epoch == 0) or (epoch == training_epochs-1):
       torch.save(recomb.state_dict(), '{}/recomb_epoch_{}.pth'.format(exp, epoch))

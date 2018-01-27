@@ -1,4 +1,6 @@
 # Readme
+* `python train_recomb.py --train --load='recomb_epoch_0.pth'`
+	* to continue training Recombinator
 * `python train_scan.py --train --load='scan_epoch_1499.pth'`
 	* to continue training SCAN
 * `python vae_disentangle.py`
@@ -12,11 +14,9 @@
 
 # Work Dairy
 ### SCAN
-* to-do-list:
-	* implement Recombinator
 	
 * 0117
-	* finish SCAN
+	* finish SCAN and Recombinator
 	* results:
 	
 	wall_color = 0 ![](SCAN/disentangle_img/sym2img0.png) 
